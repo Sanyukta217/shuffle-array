@@ -1,0 +1,135 @@
+<?php
+// PHP Program to shuffle a given array
+function shuffle_array(&$arr)
+{
+    shuffle($arr);
+ 
+    foreach($arr as &$v)
+    {
+        if(gettype($v) == "array")
+        {
+            shuffle_array($v);
+        }
+    }
+}
+//printing array
+function print_array($arr){
+    foreach($arr as $val){
+        
+       if(gettype($val) == "array")
+        {
+            echo "\t\t";
+            print_array($val);
+            
+        }
+        else{
+            echo $val." || "; 
+        }        
+    }
+   // echo "<br/>";
+}
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shuffling Array</title>
+    <style type="text/css">
+        label{
+            font-weight: bold;
+        }
+        .output{
+            font-weight: bold;
+            color: rgb(255, 0, 0);
+        }
+        input[type=number]{
+            height: 5vh;
+            width: 20vw;
+            border: 2px solid #ddd;
+        }
+        #submit{
+            width: 20vw;
+            height: 5vh;
+            background-color:rgba(0, 255, 0, 1.0);
+             color:#000;
+        }
+        #submit:hover{
+            background-color:rgba(0, 255, 0, 0.4);
+             color:#111;
+        }
+        .center {
+            margin-top: 20px;
+          display: flex;
+          padding: 10px;
+          justify-content: center;
+          align-items: center;
+          height: 100px;
+          width: auto;
+          border: 3px solid green;
+        }
+    </style>
+</head>
+<body>
+   <?php if(isset($_POST['submit']) && is_numeric($_POST['index'])){
+        $index = $_POST['index'];
+            if($index > 100 ) {
+                echo "Please enter index in range of 0 - 100";
+            }
+            else{
+                //Single Dimensional Array
+
+                // Add numbers in single dimesional array
+                $arr = array();
+                for ($i = 0; $i < 100; $i++)
+                    $arr[$i] = $i + 1;
+                //$ttl = count($arr);
+                // echo "<label>In Single Dimensional Array</label><br/>";
+                echo str_repeat("-", 100)."<br/>";
+                echo str_repeat("*", 20)."<label>Single Dimensional Array</label>".str_repeat("*", 20)."<br/>";
+                echo str_repeat("-", 100)."<br/>";
+                echo "<label>Before Shuffling: </label><br/>";
+                print_array($arr);
+                shuffle_array($arr);
+                echo "<br/><label>After Shuffling: </label><br/>";
+                print_array($arr);
+                $indexVal = $arr[$index-1];
+                echo "<h4>Value on Index ".$index." is <span class='output'>".$indexVal."</span></h4>";
+                echo str_repeat("-", 100)."<br/>";
+                echo str_repeat("*", 20)."<label>Multi Dimensional Array</label>".str_repeat("*", 20)."<br/>";
+                echo str_repeat("-", 100)."<br/>";
+
+                // Multi dimesional Array
+                $arr2 = array_map("array_fill_keys", array_fill(0, 101, array("id", "value")), range(1, 101));
+
+                echo "<label>Before Shuffling: </label><br/>";
+                print_array($arr2);
+                shuffle_array($arr2);
+                echo "<br/><label>After Shuffling: </label><br/>";
+                print_array($arr2);
+                $indexVal = $arr2[$index];
+                echo "<h4>Value on Index ".$index." is </h4>";
+                echo "<span class='output'>";
+                print_array($indexVal);
+                echo "</span>";
+            }  
+        } else { ?>
+            <div>
+                <h2>Task 2</h2>
+                <ol>
+                   <li> Create a single dimensional array with 100 items. Write a shuffle function which always shuffles and gives new results every time.
+                     (:) Write a program to display the 70th element in the array [70th might vary. i.e should be dynamic : should work as per given input]</li>
+                    <li>Create a multi dimensional array & try the same scenario (s)</li>
+                </ul>
+                 <form action="task2.php" method="POST" class="center">
+                    <label>Enter Index number</label>&ensp;&ensp;&ensp;&ensp;<br/>
+                    <input type="number" min="0" max="100" name="index" required>
+                    &ensp;&ensp;&ensp;&ensp;
+                    <input type="submit" name="submit" id="submit" value="Shuffle" >
+                    
+                </form>
+            </div>
+    <?php }  ?>
+</body>
+</html>
